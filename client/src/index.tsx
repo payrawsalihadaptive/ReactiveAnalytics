@@ -1,14 +1,19 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
+import { Provider } from 'react-redux'
 
 import App from "@/App"
 import * as serviceWorker from "@/serviceWorker"
 import { getEnvironment } from "@/utils"
 
+import { createStore } from './redux/index'
+
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault()
   window.beforeInstallPromptEvent = e
 })
+
+const store = createStore()
 
 async function init() {
   const env = getEnvironment()
@@ -24,7 +29,13 @@ async function init() {
   )
 
   const root = createRoot(document.getElementById("root")!)
-  root.render(<App />)
+  root.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </React.StrictMode>
+  )
   serviceWorker.register()
 
   window.gtag("js", new Date())

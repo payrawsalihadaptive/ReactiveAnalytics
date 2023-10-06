@@ -2,6 +2,7 @@ import { ApolloProvider } from "@apollo/client"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faLightbulb as farLightBulb } from "@fortawesome/free-regular-svg-icons"
 import { faLightbulb as fasLightBulb } from "@fortawesome/free-solid-svg-icons"
+import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles"
 import React from "react"
 import { BrowserRouter } from "react-router-dom"
 import styled from "styled-components/macro"
@@ -15,27 +16,32 @@ import { FDC3Provider } from "@/ra-platforms/fdc3"
 import GlobalStyle from "@/rt-theme/globals"
 import { ThemeProvider } from "@/rt-theme/ThemeContext"
 
+import { useAppSelector } from "./redux/hooks"
 import AppRoutes from "./Routes"
 
 library.add(fasLightBulb, farLightBulb)
 
 const App = () => {
+  const theme = useAppSelector((state) => state.themeSlice.theme)
+
   return (
     <BrowserRouter>
       <ApolloProvider client={apolloClient}>
         <GlobalStyle />
         <ThemeProvider>
-          <SearchContextProvider>
-            <FocusProvider>
-              <FDC3Provider>
-                <GlobalScrollbarStyle />
-                <ParentContainer>
-                  <PWAToolbar />
-                  <AppRoutes />
-                </ParentContainer>
-              </FDC3Provider>
-            </FocusProvider>
-          </SearchContextProvider>
+          <MuiThemeProvider theme={theme}>
+            <SearchContextProvider>
+              <FocusProvider>
+                <FDC3Provider>
+                  <GlobalScrollbarStyle />
+                  <ParentContainer>
+                    <PWAToolbar />
+                    <AppRoutes />
+                  </ParentContainer>
+                </FDC3Provider>
+              </FocusProvider>
+            </SearchContextProvider>
+          </MuiThemeProvider>
         </ThemeProvider>
       </ApolloProvider>
     </BrowserRouter>
